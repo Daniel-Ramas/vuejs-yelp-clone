@@ -9,14 +9,14 @@
           <div class="col search-result-container">
             <!-- Filter List Drop Down -->
             <div class="row no-gutters align-items-center">
-              <div class="col-6">
+              <div class="col-sm-auto">
                 <p class="query-sub-heading" v-if="businesses.length != 0">
                   {{ renderSubHeading }}
                 </p>
 
                 <!-- End Filter List Drop Down -->
               </div>
-              <div class="col-6 filter-categories" style="textAlign: right;">
+              <div class="col filter-categories" style="textAlign: right;">
                 <div class="select">
                   <label for="sort_by">Sort:</label>
                   <select
@@ -36,10 +36,16 @@
             <!-- Search Results -->
             <div class="row">
               <div class="col list-search">
+                <app-empty-search-card
+                  v-if="loadingCard"
+                  v-for="card in 5"
+                ></app-empty-search-card>
                 <div
                   class="search-result-wrap"
                   v-if="typeof businesses != 'undefined' || null"
                 >
+                  <!-- Blank place holder -->
+
                   <div
                     class="search-result-content-list"
                     v-for="biz in businesses"
@@ -99,6 +105,7 @@ import { BIconCaretRight, BIconCaretLeft } from "bootstrap-vue";
 import MapView from "./MapView.vue";
 import SearchResultCard from "./SearchResultCard.vue";
 import FiltersPanel from "./FiltersPanel";
+import EmptySearchCard from "./templates/EmptySearchCard.vue";
 
 export default {
   data() {
@@ -134,7 +141,8 @@ export default {
     appSearchResultCard: SearchResultCard,
     appFiltersPanel: FiltersPanel,
     BIconCaretRight,
-    BIconCaretLeft
+    BIconCaretLeft,
+    appEmptySearchCard: EmptySearchCard
   },
   computed: {
     ...mapGetters([
@@ -144,7 +152,8 @@ export default {
       "searchInitiated",
       "sort_by",
       "searchQuery",
-      "searchLocation"
+      "searchLocation",
+      "loading"
     ]),
     sortList: {
       get() {
@@ -182,6 +191,9 @@ export default {
           return "error";
           break;
       }
+    },
+    loadingCard() {
+      return this.loading;
     }
   },
   beforeUpdate() {

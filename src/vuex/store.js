@@ -17,13 +17,15 @@ export const store = new Vuex.Store({
     total: 0,
     currentPage: 0,
     searchInitiated: false,
+    loading: false,
     searchQuery: {
       term: "",
       location: "",
       open_now: false,
       price: [],
       sort_by: "best_match",
-      attributes: []
+      attributes: [],
+      radius: null
     }
   },
   getters: {
@@ -53,6 +55,9 @@ export const store = new Vuex.Store({
     },
     searchLocation: state => {
       return state.searchQuery.location;
+    },
+    loading: state => {
+      return state.loading;
     }
   },
   mutations: {
@@ -114,12 +119,19 @@ export const store = new Vuex.Store({
     },
     UPDATE_ATTRIBUTES(state, payload) {
       state.searchQuery.attributes = payload;
+    },
+    LOAD_SPINNER(state, payload) {
+      state.loading = payload;
+    },
+    UPDATE_RADIUS(state, payload) {
+      state.searchQuery.radius = payload;
     }
   },
   actions: {
     getBusinesses({ commit, state }) {
       commit("CLEAR_RESULTS");
       commit("CLEAR_MARKERS");
+      commit("LOAD_SPINNER", true);
       yelp
         .get("/search", {
           params: {
@@ -135,7 +147,9 @@ export const store = new Vuex.Store({
             atrributes:
               state.searchQuery.attributes.length == 0
                 ? ""
-                : state.searchQuery.attributes.join(",")
+                : state.searchQuery.attributes.join(","),
+            radius:
+              state.searchQuery.radius == "null" ? "" : state.searchQuery.radius
           }
         })
         .then(response => {
@@ -153,7 +167,8 @@ export const store = new Vuex.Store({
           commit("SET_COORDS", coordinates);
           commit("ADD_MARKERS");
         })
-        .catch(error => alert(error));
+        .catch(error => alert(error))
+        .finally(() => commit("LOAD_SPINNER", false));
 
       //push all coordinates from api call to array
     }

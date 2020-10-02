@@ -69,6 +69,48 @@
         value="hot_and_new"
       />
       <label for="hot-and-new">Hot and New</label>
+      <br />
+      <hr />
+      <p class="radius-title" style="fontWeight: bold">Distance</p>
+      <input
+        type="radio"
+        name="birds-eye"
+        id="birds-eye"
+        value="null"
+        v-model="radius"
+        @change="submitRadius()"
+      />
+      <label for="birds-eye">Bird's Eye View</label>
+      <br />
+      <input
+        type="radio"
+        name="driving"
+        id="driving"
+        value="8046"
+        v-model="radius"
+        @change="submitRadius()"
+      />
+      <label for="driving">Driving (5 mi)</label>
+      <br />
+      <input
+        type="radio"
+        name="biking"
+        id="biking"
+        value="3219"
+        v-model="radius"
+        @change="submitRadius()"
+      />
+      <label for="biking">Biking (2 mi)</label>
+      <br />
+      <input
+        type="radio"
+        name="walking"
+        id="walking"
+        value="1609"
+        @change="submitRadius()"
+        v-model="radius"
+      />
+      <label for="walking">Walking (1 mi)</label>
     </div>
   </div>
 </template>
@@ -84,7 +126,8 @@ export default {
       isActive1: false,
       isActive2: false,
       isActive3: false,
-      isActive4: false
+      isActive4: false,
+      radius: null
     };
   },
   methods: {
@@ -120,6 +163,10 @@ export default {
       }
       this.$store.commit("UPDATE_PRICE_ARRAY", this.price);
       this.getBusinesses();
+    },
+    submitRadius() {
+      this.$store.commit("UPDATE_RADIUS", this.radius);
+      this.getBusinesses();
     }
   },
   computed: {
@@ -141,6 +188,9 @@ export default {
         this.$store.commit("UPDATE_ATTRIBUTES", value);
         this.getBusinesses();
       }
+    },
+    nullVal() {
+      return null;
     }
   }
 };

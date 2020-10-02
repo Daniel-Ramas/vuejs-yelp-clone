@@ -12,25 +12,35 @@
           <!-- Star Rating -->
           <div class="row align-items-center no-gutters">
             <div class="col-xs-auto" v-for="stars in Math.floor(info.rating)">
-              <b-icon-star-fill class="stars-style star-full"></b-icon-star-fill>
+              <b-icon-star-fill
+                class="stars-style star-full"
+                :class="starColor"
+              ></b-icon-star-fill>
             </div>
             <div class="col-xs-auto" v-if="info.rating % 1 != 0">
-              <b-icon-star-half class="stars-style half-star"></b-icon-star-half>
+              <b-icon-star-half
+                class="stars-style half-star"
+                :class="halfStarColor"
+              ></b-icon-star-half>
             </div>
             <div class="col-xs-auto" v-if="info.rating <= 4">
-              <b-icon-star-fill v-for="stars in emptyStars" class="stars-style empty-star"></b-icon-star-fill>
+              <b-icon-star-fill
+                v-for="stars in emptyStars"
+                class="stars-style empty-star"
+              ></b-icon-star-fill>
             </div>
             <div class="col-xs-auto">{{ info.review_count }}</div>
           </div>
           <!-- Star Rating End -->
           <!-- Price and Category -->
-          <div class="row align-items-center">
+          <div class="row align-items-center price-cat">
             <div class="col">
-              <p style="color: #808080">{{ info.price }} • {{ info.categories[0].title }}</p>
+              <p style="color: #808080">
+                {{ info.price }} • {{ info.categories[0].title }}
+              </p>
             </div>
           </div>
         </div>
-
         <!-- Phone Number & Address -->
         <div class="right-info col-4" style="textAlign: right">
           <p v-if="info.phone">{{ info.phone | phoneNumber }}</p>
@@ -51,20 +61,38 @@ import { BIcon, BIconStarFill, BIconStarHalf } from "bootstrap-vue";
 export default {
   data() {
     return {
-      empty: 0,
+      empty: 0
     };
   },
   computed: {
     emptyStars() {
       return 5 - Math.ceil(this.info.rating);
     },
+    starColor() {
+      if (this.info.rating < 2) {
+        return "yellow-star";
+      } else if (this.info.rating <= 3) {
+        return "orange-star";
+      } else if (this.info.rating <= 4.5) {
+        return "reg-red";
+      }
+    },
+    halfStarColor() {
+      if (this.info.rating < 2) {
+        return "yellow-half-star";
+      } else if (this.info.rating <= 3) {
+        return "orange-half-star";
+      } else if (this.info.rating <= 4.5) {
+        return "reg-half-red";
+      }
+    }
   },
   props: ["info"],
   components: {
     BIcon,
     BIconStarFill,
-    BIconStarHalf,
-  },
+    BIconStarHalf
+  }
 };
 </script>
 
@@ -131,13 +159,44 @@ p {
 
 .star-full {
   background-color: #b32323;
+  border-radius: 3px;
 }
 
 .empty-star {
-  background-color: #808080;
+  background-color: #e6e6e6;
+  border-radius: 3px;
 }
 
 .half-star {
-  background: linear-gradient(to right, #b32323 50%, #808080 50%);
+  background: linear-gradient(to right, #b32323 50%, #e6e6e6 50%);
+  border-radius: 3px;
+}
+
+.yellow-star {
+  background-color: #fedd30 !important;
+}
+
+.orange-star {
+  background-color: #ff9242 !important;
+}
+
+.reg-red {
+  background-color: #f15c4f !important;
+}
+
+.yellow-half-star {
+  background: linear-gradient(to right, #fedd30 50%, #e6e6e6 50%) !important;
+}
+
+.orange-half-star {
+  background: linear-gradient(to right, #ff9242 50%, #e6e6e6 50%) !important;
+}
+
+.reg-half-red {
+  background: linear-gradient(to right, #f15c4f 50%, #e6e6e6 50%) !important;
+}
+
+.price-cat {
+  margin-top: 5px;
 }
 </style>

@@ -5,6 +5,7 @@
     ref="mapRef"
     map-type-id="terrain"
     style="width: 100%; height: 720px;"
+    :options="{ styles: styles }"
   >
     <!--<GmapMarker
       :key="index"
@@ -40,8 +41,15 @@ import { mapMutations, mapGetters } from "vuex";
 import { gmapApi } from "vue2-google-maps";
 import GmapCustomMarker from "vue2-gmap-custom-marker";
 import { BIconGeoAltFill, BIconstack } from "bootstrap-vue";
-
+import { styles } from "../../assets/mapstyle";
 export default {
+  data() {
+    return {
+      map: null,
+      googleMarkers: [],
+      styles: styles
+    };
+  },
   methods: {
     ...mapMutations(["SET_COORDS"])
   },
@@ -57,14 +65,27 @@ export default {
       })
       .catch(error => alert(error));
   },
+  mounted() {
+    this.$refs.mapRef.$mapPromise.then(map => (this.map = map));
+  },
   updated() {
+    /*
+      Note you will always have the google markers if you eventually want to use the info window method, for now it somewhat makes things a little too complicated and the overall look of the map is not what wwe wanted
+    */
+
     var bounds = new this.google.maps.LatLngBounds();
     for (var i = 0; i < this.markers.length; i++) {
       bounds.extend(this.markers[i].position);
+      /*this.googleMarkers.push(
+        new this.google.maps.Marker({
+          position: this.markers[i].position,
+          map: this.map,
+          title: "test",
+          icon: null //hiding the default google icon
+        })
+      ); */
     }
-    this.$refs.mapRef.$mapPromise.then(map => {
-      map.fitBounds(bounds);
-    });
+    this.map.fitBounds(bounds);
   },
   components: {
     BIconGeoAltFill,

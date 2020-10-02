@@ -5,8 +5,11 @@
         <app-header></app-header>
       </div>
     </div>
+
     <div class="row no-gutters">
-      <div class="col"><app-main-body></app-main-body></div>
+      <div class="col" style="borderTop: 1px solid gray">
+        <app-main-body></app-main-body>
+      </div>
     </div>
   </div>
 </template>

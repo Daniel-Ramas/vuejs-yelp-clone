@@ -29,16 +29,8 @@
             v-model="location"
           />
           <div class="input-group-append">
-            <button
-              type="submit"
-              class="btn btn-search"
-              style="backgroundColor: #d32323"
-              @click="onSearch"
-            >
-              <b-icon-search
-                class="search-icon"
-                font-scale="1.5"
-              ></b-icon-search>
+            <button type="submit" class="btn btn-search" @click="onSearch">
+              <i :class="renderSpinner"></i>
             </button>
           </div>
         </div>
@@ -79,21 +71,23 @@
     <div class="row">
       <div class="col-6 drop-downs offset-2">
         <div class="row">
-          <div class="col align-self-center">
-            Restuarants
-            <b-icon-caret-down></b-icon-caret-down>
+          <div class="col header-menu-dropdown">
+            <app-header-dropdowns
+              button-name="Restaurants"
+            ></app-header-dropdowns>
           </div>
-          <div class="col">
-            Home Services
-            <b-icon-caret-down></b-icon-caret-down>
+          <div class="col header-menu-dropdown">
+            <app-header-dropdowns
+              button-name="Home Services"
+            ></app-header-dropdowns>
           </div>
-          <div class="col">
-            Auto Services
-            <b-icon-caret-down></b-icon-caret-down>
+          <div class="col header-menu-dropdown">
+            <app-header-dropdowns
+              button-name="Auto Services"
+            ></app-header-dropdowns>
           </div>
-          <div class="col">
-            More
-            <b-icon-caret-down></b-icon-caret-down>
+          <div class="col header-menu-dropdown">
+            <app-header-dropdowns button-name="More"></app-header-dropdowns>
           </div>
         </div>
       </div>
@@ -104,6 +98,10 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 import { BIconCaretDown, BIconSearch } from "bootstrap-vue";
+
+//component imports
+
+import HeaderDropdowns from "./HeaderDropdowns.vue";
 export default {
   data() {
     return {
@@ -137,11 +135,17 @@ export default {
       set(value) {
         this.$store.commit("UPDATE_LOCATION", value);
       }
+    },
+    renderSpinner() {
+      return this.$store.getters.loading
+        ? "fa fa-spinner fa-spin"
+        : "fa fa-search";
     }
   },
   components: {
     BIconCaretDown,
-    BIconSearch
+    BIconSearch,
+    AppHeaderDropdowns: HeaderDropdowns
   }
 };
 </script>
@@ -159,6 +163,7 @@ export default {
 
 .header-container {
   padding: 20px;
+  padding-bottom: 0px !important;
 }
 
 .header-main {
@@ -173,6 +178,7 @@ export default {
 .btn-search {
   color: white;
   background-color: #d32323;
+  width: 50px;
 }
 
 .btn-search:hover {
@@ -214,5 +220,12 @@ export default {
 .icon-padding {
   padding: 10px;
   margin: 5px;
+}
+
+.header-menu-dropdown {
+  height: 40px;
+  font-size: 14px;
+  position: relative;
+  padding: 0px;
 }
 </style>
