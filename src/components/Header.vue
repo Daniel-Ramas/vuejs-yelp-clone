@@ -8,7 +8,7 @@
             <i class="fa fa-yelp" aria-hidden="true"></i>
           </div>
           <div class="col-xs-auto logo">
-            <h4>"YELP"</h4>
+            <router-link to="/"><h4>"YELP"</h4></router-link>
           </div>
         </div>
       </div>

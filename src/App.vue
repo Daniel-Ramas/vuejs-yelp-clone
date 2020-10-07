@@ -1,28 +1,11 @@
 <template>
   <div>
-    <div class="row no-gutters">
-      <div class="col">
-        <app-header></app-header>
-      </div>
-    </div>
-
-    <div class="row no-gutters">
-      <div class="col" style="borderTop: 1px solid gray">
-        <app-main-body></app-main-body>
-      </div>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Header from "./components/Header.vue";
-import MainBody from "./components/MainBody.vue";
-export default {
-  components: {
-    appHeader: Header,
-    appMainBody: MainBody
-  }
-};
+export default {};
 </script>
 
 <style>
