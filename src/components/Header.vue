@@ -150,7 +150,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .drop-downs {
   font-size: 12px;
   background-color: transparent;
