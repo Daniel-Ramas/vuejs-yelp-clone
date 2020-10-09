@@ -44,7 +44,10 @@
           <div class="col search-section">
             <div class="input-group search-bar">
               <div class="input-group-prepend">
-                <span class="input-group-text find-search-bar" id="basic-addon1"
+                <span
+                  class="input-group-text find-search-bar"
+                  id="basic-addon1"
+                  :class="ddToggle"
                   >Find</span
                 >
               </div>
@@ -53,9 +56,20 @@
                 aria-label="term"
                 class="form-control term-input"
                 placeholder="plumbers, delivery, takeout..."
+                ref="termInput"
+                @focus="focusActive = true"
+                @blur="focusActive = false"
+                v-model="homepageTerm"
                 list="term-list"
               />
-              <div class="term-dropdown-menu">Hello</div>
+              <div class="term-dropdown-menu">
+                <app-term-drop-down
+                  @suggest="closeDropdown"
+                  :suggestions="originalArr"
+                  :selection="homepageTerm"
+                  ref="dropdown"
+                ></app-term-drop-down>
+              </div>
               <span class="input-group-text near-search-bar">Near</span>
               <input
                 type="text"
@@ -147,29 +161,76 @@
 </template>
 
 <script>
+import _ from "lodash";
 import {
   BIconSearch,
   BIconCaretDownFill,
   BIconWrench,
   BIconHouseDoorFill
 } from "bootstrap-vue";
+import TermDropDown from "../components/homepagecomps/TermDropDown";
+import categories from "../api/categories";
+
 export default {
   data() {
     return {
-      test: ""
+      focusActive: false,
+      homepageTerm: "",
+      originalArr: [],
+      filteredArr: []
     };
   },
   methods: {
     onSub() {
+      this.$store.commit("UPDATE_TERM", this.homepageTerm);
       this.$router.push({ path: "search" });
+    },
+    test() {
+      this.focusActive = !this.focusActive;
+      console.log(this.focusActive);
+    },
+    closeDropdown(term) {
+      //will permanently set the value to none but will reset if the home screen is revisited,
+      //it needs to automatically search business once a value is clicked
+      //will need to access location from browser IF the location input is empty
+      this.$refs.dropdown.$el.style.display = "none";
+      this.homepageTerm = term;
+    },
+    onTermInput() {}
+
+    //this is where we will calculate the logic to complete the form
+  },
+  computed: {
+    ddToggle() {
+      return this.focusActive ? "square-corner" : "";
     }
   },
   components: {
     BIconSearch,
     BIconCaretDownFill,
     BIconWrench,
-    BIconHouseDoorFill
-  }
+    BIconHouseDoorFill,
+    appTermDropDown: TermDropDown
+  },
+  beforeMount() {
+    categories
+      .get("/categories", {
+        params: {
+          locale: "en_US"
+        }
+      })
+      .then(response => {
+        this.originalArr = response.data.categories.map(o => {
+          return o.title;
+        });
+        console.log(this.originalArr);
+        //Successful list of categories for array
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+  beforeUpdate() {}
 };
 </script>
 
@@ -217,18 +278,19 @@ export default {
 .term-dropdown-menu {
   position: absolute;
   display: none;
-  top: 50px;
+  top: 48px;
   width: 47%;
   z-index: 999;
+  background-color: white;
+  text-align: left !important;
 }
 
 .term-input:focus + .term-dropdown-menu {
-  background-color: white;
-  display: block;
+  display: block !important;
 }
 
-.term-input:focus > .search-bar {
-  border-bottom-left-radius: 0%;
+.term-dropdown-menu:hover {
+  display: block !important;
 }
 
 .links {
@@ -268,7 +330,6 @@ h2 {
 }
 
 .form-control {
-  color: #999999;
   min-height: 3em;
 }
 
@@ -326,7 +387,6 @@ h2 {
 
 .term-input {
   padding-left: 0px;
-
   border: none;
 }
 
@@ -357,7 +417,7 @@ h2 {
   border-left: 1px solid #e6e6e6 !important;
 }
 
-input:focus {
-  outline: none;
+.square-corner {
+  border-bottom-left-radius: 0;
 }
 </style>
