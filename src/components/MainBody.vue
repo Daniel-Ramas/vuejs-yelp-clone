@@ -200,7 +200,8 @@ export default {
     //was a new search query made?
     console.log("before update lifecycle method:" + this.pageCache);
     if (this.searchInitiated) this.pageCache = 1;
-  }
+  },
+
 };
 </script>
 

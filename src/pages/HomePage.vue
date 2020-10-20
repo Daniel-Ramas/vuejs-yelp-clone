@@ -1,17 +1,11 @@
 <template>
   <div>
     <div class="row background-img">
-      <div class="offset-2 col-8 box">
+      <div class="mx-auto box">
         <div class="row align-items-center top">
-          <div class="col-xs-auto links">
-            Write a Review
-          </div>
-          <div class="col-xs-auto links">
-            Events
-          </div>
-          <div class="col-xs-auto links">
-            Talk
-          </div>
+          <div class="col-xs-auto links">Write a Review</div>
+          <div class="col-xs-auto links">Events</div>
+          <div class="col-xs-auto links">Talk</div>
           <div class="col">
             <div class="row justify-content-end">
               <div class="col-xs-auto">
@@ -46,12 +40,13 @@
               <div class="input-group-prepend">
                 <span
                   class="input-group-text find-search-bar"
-                  id="basic-addon1"
+                  id="label-one"
                   :class="ddToggle"
                   >Find</span
                 >
               </div>
               <input
+                id="input-one"
                 type="text"
                 aria-label="term"
                 class="form-control term-input"
@@ -62,7 +57,7 @@
                 v-model="homepageTerm"
                 list="term-list"
               />
-              <div class="term-dropdown-menu">
+              <div class="term-dropdown-menu" id="term-dropdown-menu">
                 <app-term-drop-down
                   @suggest="closeDropdown"
                   :suggestions="originalArr"
@@ -70,16 +65,27 @@
                   ref="dropdown"
                 ></app-term-drop-down>
               </div>
-              <span class="input-group-text near-search-bar">Near</span>
+              <span class="input-group-text near-search-bar" id="label-two"
+                >Near</span
+              >
               <input
                 type="text"
                 aria-label="location"
                 class="form-control location-input"
+                id="input-two"
                 placeholder="address, neighborhood, city, state, or zip"
+                v-model="homepageLocation"
+                ref="location_input"
               />
+              <div class="location-dropdown-menu" id="location-dropdown-menu">
+                <app-location-drop-down
+                  @suggest="closeLocation"
+                  ref="location_dropdown"
+                ></app-location-drop-down>
+              </div>
               <div class="input-group-append">
                 <button type="submit" class="btn btn-search" @click="onSub()">
-                  <b-icon-search></b-icon-search>
+                  <i :class="spinner"></i>
                 </button>
               </div>
             </div>
@@ -90,9 +96,7 @@
                     <b-icon-wrench></b-icon-wrench>
                   </div>
                   <div class="col-xs-auto">
-                    <p class="search-bar-link">
-                      Plumbers
-                    </p>
+                    <p class="search-bar-link">Plumbers</p>
                   </div>
                 </div>
               </div>
@@ -102,9 +106,7 @@
                     <i class="fa fa-cutlery"></i>
                   </div>
                   <div class="col-xs-auto">
-                    <p class="search-bar-link">
-                      Restaurants
-                    </p>
+                    <p class="search-bar-link">Restaurants</p>
                   </div>
                 </div>
               </div>
@@ -114,9 +116,7 @@
                     <b-icon-house-door-fill></b-icon-house-door-fill>
                   </div>
                   <div class="col-xs-auto">
-                    <p class="search-bar-link">
-                      Home Services
-                    </p>
+                    <p class="search-bar-link">Home Services</p>
                   </div>
                   <div class="col-xs-auto icon-link-margins">
                     <b-icon-caret-down-fill></b-icon-caret-down-fill>
@@ -129,18 +129,14 @@
                     <i class="fa fa-bicycle"></i>
                   </div>
                   <div class="col-xs-auto">
-                    <p class="search-bar-link">
-                      Delivery
-                    </p>
+                    <p class="search-bar-link">Delivery</p>
                   </div>
                 </div>
               </div>
               <div class="col-sm-auto link-margins">
                 <div class="row">
                   <div class="col-xs-auto icon-link-margins">
-                    <p class="search-bar-link">
-                      Black Owned
-                    </p>
+                    <p class="search-bar-link">Black Owned</p>
                   </div>
                   <div class="col-xs-auto">
                     <b-icon-caret-down-fill></b-icon-caret-down-fill>
@@ -151,9 +147,7 @@
           </div>
         </div>
         <div class="row align-items-end bottom-main">
-          <div class="col credits">
-            A Clone By Daniel Ramas
-          </div>
+          <div class="col credits">A Clone By Daniel Ramas</div>
         </div>
       </div>
     </div>
@@ -166,24 +160,34 @@ import {
   BIconSearch,
   BIconCaretDownFill,
   BIconWrench,
-  BIconHouseDoorFill
+  BIconHouseDoorFill,
 } from "bootstrap-vue";
 import TermDropDown from "../components/homepagecomps/TermDropDown";
 import categories from "../api/categories";
+import LocationDropDownVue from "../components/homepagecomps/LocationDropDown.vue";
+
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
     return {
       focusActive: false,
       homepageTerm: "",
+      homepageLocation: "",
       originalArr: [],
-      filteredArr: []
+      filteredArr: [],
+      dropdownWidth: 0,
+      windowWidth: window.innerWidth,
+      loading: false,
     };
   },
   methods: {
+    ...mapActions(["getBusinesses"]),
     onSub() {
+      this.loading = true;
       this.$store.commit("UPDATE_TERM", this.homepageTerm);
-      this.$router.push({ path: "search" });
+      this.$store.commit("UPDATE_LOCATION", this.homepageLocation);
+      this.$router.push("/search");
     },
     test() {
       this.focusActive = !this.focusActive;
@@ -196,13 +200,26 @@ export default {
       this.$refs.dropdown.$el.style.display = "none";
       this.homepageTerm = term;
     },
-    onTermInput() {}
+    closeLocation(term) {
+      this.$refs.location_dropdown.$el.style.display = "none";
+      if (term == "Current Location")
+        this.$refs.location_input.style.color = "#0097ec";
+      this.homepageLocation = term;
+    },
+    onResize() {
+      this.windowWidth = window.innerHeight;
+    },
 
     //this is where we will calculate the logic to complete the form
   },
   computed: {
+    ...mapGetters["businesses"],
     ddToggle() {
       return this.focusActive ? "square-corner" : "";
+    },
+    spinner(){
+     return this.loading ? "fa fa-spinner fa-spin"
+        : "fa fa-search";
     }
   },
   components: {
@@ -210,27 +227,51 @@ export default {
     BIconCaretDownFill,
     BIconWrench,
     BIconHouseDoorFill,
-    appTermDropDown: TermDropDown
+    appTermDropDown: TermDropDown,
+    appLocationDropDown: LocationDropDownVue,
   },
   beforeMount() {
     categories
       .get("/categories", {
         params: {
-          locale: "en_US"
-        }
+          locale: "en_US",
+        },
       })
-      .then(response => {
-        this.originalArr = response.data.categories.map(o => {
+      .then((response) => {
+        this.originalArr = response.data.categories.map((o) => {
           return o.title;
         });
         console.log(this.originalArr);
         //Successful list of categories for array
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   },
-  beforeUpdate() {}
+  mounted() {
+    var findInputWidth =
+      document.getElementById("input-one").offsetWidth +
+      document.getElementById("label-one").offsetWidth;
+
+    document.getElementById("term-dropdown-menu").style.width =
+      findInputWidth - 2 + "px";
+
+    var findLocationWidth =
+      document.getElementById("input-two").offsetWidth +
+      document.getElementById("label-two").offsetWidth;
+
+    document.getElementById("location-dropdown-menu").style.width =
+      findLocationWidth - 1 + "px";
+    document.getElementById("location-dropdown-menu").style.left =
+      findInputWidth - 1 + "px";
+  },
+    beforeRouteLeave(to, from, next){
+    this.$store.dispatch('init').then(() => {
+      setTimeout(()=>{next()}, 2000)
+      }).catch(error => {
+      alert(error)
+    })
+  }
 };
 </script>
 
@@ -258,6 +299,7 @@ export default {
 .box {
   position: relative;
   height: 100vh;
+  flex: 0 0 1000px;
 }
 
 .header-right {
@@ -275,11 +317,16 @@ export default {
   width: 50px;
 }
 
+.search-section {
+  -ms-flex: 0 0 1000px;
+  flex: 0 0 1000px;
+}
+
 .term-dropdown-menu {
   position: absolute;
   display: none;
+
   top: 48px;
-  width: 47%;
   z-index: 999;
   background-color: white;
   text-align: left !important;
@@ -290,6 +337,23 @@ export default {
 }
 
 .term-dropdown-menu:hover {
+  display: block !important;
+}
+
+.location-dropdown-menu {
+  position: absolute;
+  display: none;
+  top: 48px;
+  z-index: 999;
+  background-color: white;
+  text-align: left !important;
+}
+
+.location-input:focus + .location-dropdown-menu {
+  display: block !important;
+}
+
+.location-dropdown-menu:hover {
   display: block !important;
 }
 

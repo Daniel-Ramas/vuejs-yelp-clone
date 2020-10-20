@@ -2,7 +2,7 @@
   <div>
     <div
       class="suggested-term"
-      @click="clickSuggested(match)"
+      @click="clickSuggested(matches.indexOf(match))"
       v-for="match in matches.slice(0, 6)"
       v-html="match"
     ></div>
@@ -19,53 +19,51 @@ export default {
         "Takeout",
         "Accountants",
         "Plumbers",
-        "Auto Repair"
+        "Auto Repair",
       ],
       filteredTerms: [],
-      boldedTerms: []
+      noBoldTerms: [],
     };
   },
   methods: {
-    clickSuggested(term) {
-      if (typeof term === "string") this.$emit("suggest", term);
-      else this.$emit("suggest", term.title);
+    clickSuggested(index) {
+      if (this.selection != "") this.$emit("suggest", this.noBoldTerms[index]);
+      else this.$emit("suggest", this.terms[index]);
     },
     closeDrop() {
       console.log("close");
-    }
+    },
   },
   computed: {
     matches() {
       if (this.selection == "") {
         return this.terms;
       } else {
-        this.filteredTerms = this.suggestions.filter(str => {
+        this.filteredTerms = this.suggestions.filter((str) => {
           return str.toUpperCase().indexOf(this.selection.toUpperCase()) >= 0;
-
-          //Explanation:
-          /*
-                it will filter the entire array and for the alias of each object if indexOf finds anything other than -1, it will return the object as part of the new array
-              */
+        });
+        this.noBoldTerms = this.suggestions.filter((str) => {
+          return str.toUpperCase().indexOf(this.selection.toUpperCase()) >= 0;
         });
         for (var i in this.filteredTerms) {
           this.filteredTerms[i] = this.filteredTerms[i].replace(
-            RegExp(this.selection, "g"),
-            `<b>${this.selection}</b>`
+            RegExp("(" + this.selection + ")", "gi"),
+            `<b>$1</b>`
+            //Case insensitive replacement
           );
-          console.log(this.filteredTerms[i]);
         }
         return this.filteredTerms;
       }
-    }
+    },
   },
   props: {
     suggestions: {
-      type: Array
+      type: Array,
     },
     selection: {
-      type: String
-    }
-  }
+      type: String,
+    },
+  },
 };
 </script>
 

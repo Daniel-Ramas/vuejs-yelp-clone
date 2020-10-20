@@ -25,7 +25,9 @@ export const store = new Vuex.Store({
       price: [],
       sort_by: "best_match",
       attributes: [],
-      radius: null
+      radius: null,
+      latitude: 0,
+      longitude: 0,
     }
   },
   getters: {
@@ -58,7 +60,7 @@ export const store = new Vuex.Store({
     },
     loading: state => {
       return state.loading;
-    }
+    },
   },
   mutations: {
     ADD_RESULTS(state, payload) {
@@ -125,7 +127,11 @@ export const store = new Vuex.Store({
     },
     UPDATE_RADIUS(state, payload) {
       state.searchQuery.radius = payload;
-    }
+    },
+    UPDATE_LATITUDE_LONG(state, payload) {
+      state.searchQuery.latitude = payload.lat;
+      state.searchQuery.longitude = payload.lng;
+    },
   },
   actions: {
     getBusinesses({ commit, state }) {
@@ -136,7 +142,9 @@ export const store = new Vuex.Store({
         .get("/search", {
           params: {
             term: state.searchQuery.term,
-            location: state.searchQuery.location,
+            ...(state.searchQuery.location != "Current Location" && {location: state.searchQuery.location}),
+            ...(state.searchQuery.location == "Current Location" && {latitude: state.searchQuery.latitude,
+              longitude: state.searchQuery.longitude}),
             open_now: state.searchQuery.open_now,
             price:
               state.searchQuery.price.length == 0
@@ -171,6 +179,9 @@ export const store = new Vuex.Store({
         .finally(() => commit("LOAD_SPINNER", false));
 
       //push all coordinates from api call to array
+    },
+    init({dispatch}){
+      dispatch('getBusinesses');
     }
   }
 });
