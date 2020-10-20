@@ -5,8 +5,7 @@
         <app-header></app-header>
       </div>
     </div>
-
-    <div class="row no-gutters">
+    <div class="row no-gutters horizontal-div">
       <div class="col" style="bordertop: 1px solid gray">
         <app-main-body></app-main-body>
       </div>
@@ -28,4 +27,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.horizontal-div {
+  border-top: 1px solid #e6e6e6;
+}
+</style>

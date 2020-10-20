@@ -207,11 +207,9 @@ export default {
 
 <style>
 .search-results-and-filter {
-  border: 2px solid pink;
 }
 
 .filters-container {
-  border: solid red 2px;
   margin-left: 10px;
 }
 
@@ -223,7 +221,6 @@ export default {
   display: flex;
   flex-shrink: 0;
   z-index: 999;
-  border: solid blue 2px;
   padding: 10px;
 }
 .google-map {
@@ -237,12 +234,10 @@ export default {
   flex-shrink: 0;
   z-index: 999;
   margin: 0;
-  border: solid blue 2px;
 }
 
 .search-result-container {
   width: 100%;
-  border: 2px solid green;
 }
 
 .map-container {
@@ -259,8 +254,8 @@ export default {
 
 .page-offset {
   text-align: right;
-  border-top: 1px solid #808080;
-  border-bottom: 1px solid #808080;
+  border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 li {
@@ -284,7 +279,6 @@ li:hover {
 }
 
 .google-map {
-  border: 2px solid green;
 }
 
 .list-search {
@@ -314,5 +308,9 @@ li:hover {
 .filter-categories {
   font-size: 16px;
   padding: 10px 8px 10px 14px;
+}
+
+.container-fluid-edgless {
+  background-color: #f5f5f5
 }
 </style>

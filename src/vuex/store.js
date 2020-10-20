@@ -28,6 +28,7 @@ export const store = new Vuex.Store({
       radius: null,
       latitude: 0,
       longitude: 0,
+      response_status: 0,
     }
   },
   getters: {
@@ -61,6 +62,21 @@ export const store = new Vuex.Store({
     loading: state => {
       return state.loading;
     },
+    term: state => {
+      return state.searchQuery.term
+    },
+    location: state => {
+      return state.searchQuery.location
+    },
+    search_coordinates: state => {
+      return {
+        latitude: state.searchQuery.latitude,
+        longitude: state.searchQuery.longitude
+      }
+    },
+    response_status: state => {
+      return state.searchQuery.response_status;
+    }
   },
   mutations: {
     ADD_RESULTS(state, payload) {
@@ -132,6 +148,9 @@ export const store = new Vuex.Store({
       state.searchQuery.latitude = payload.lat;
       state.searchQuery.longitude = payload.lng;
     },
+    UPDATE_RESPONSE_STATUS(state, payload) {
+      state.searchQuery.response_status = payload;
+    }
   },
   actions: {
     getBusinesses({ commit, state }) {
@@ -161,7 +180,7 @@ export const store = new Vuex.Store({
           }
         })
         .then(response => {
-          //console.log(response.data);
+          commit("UPDATE_RESPONSE_STATUS", response.status);
           commit("PAGE_JUMP", 0);
           commit("ADD_RESULTS", Object.values(response.data.businesses));
           commit("ADD_TOTAL", response.data.total);

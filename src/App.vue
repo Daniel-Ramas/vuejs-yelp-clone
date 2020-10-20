@@ -10,6 +10,6 @@ export default {};
 
 <style>
 .container-fluid {
-  background-color: #f5f5f5 !important;
+  
 }
 </style>

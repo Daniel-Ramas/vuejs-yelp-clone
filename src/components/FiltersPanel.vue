@@ -1,6 +1,6 @@
 <template>
   <div class="row filter-button-group no-gutters">
-    <div class="col" style="border: 2px solid green">
+    <div class="col">
       <p class="filter-title">Filters</p>
       <br />
       <div class="btn-group" role="group">

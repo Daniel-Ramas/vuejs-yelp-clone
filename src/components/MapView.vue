@@ -47,7 +47,8 @@ export default {
     return {
       map: null,
       googleMarkers: [],
-      styles: styles
+      styles: styles,
+      
     };
   },
   methods: {

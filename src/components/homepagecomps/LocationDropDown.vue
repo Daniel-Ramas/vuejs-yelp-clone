@@ -21,11 +21,10 @@ export default {
   methods: {
     locationSelect(loc) {
       if (loc == "Current Location") {
+        this.$emit("suggest", loc)
         this.$getLocation({})
           .then((coordinates) => {
             const coords = { lat: coordinates.lat, lng: coordinates.lng };
-            console.log(coords);
-            this.$emit("suggest", loc)
             this.$store.commit("UPDATE_LATITUDE_LONG", coords);
           })
           .catch((error) => alert(error));

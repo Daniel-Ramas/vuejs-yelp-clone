@@ -267,7 +267,10 @@ export default {
   },
     beforeRouteLeave(to, from, next){
     this.$store.dispatch('init').then(() => {
-      setTimeout(()=>{next()}, 2000)
+      console.log(this.$store.getters.response_status)
+      setTimeout(()=>{this.$store.getters.response_status == 200 ? next() : next({path: ""})
+      this.loading = false;
+      }, 2000) 
       }).catch(error => {
       alert(error)
     })
