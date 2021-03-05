@@ -28,7 +28,7 @@ export const store = new Vuex.Store({
       radius: null,
       latitude: 0,
       longitude: 0,
-      response_status: 0,
+      response_status: 0
     }
   },
   getters: {
@@ -63,16 +63,16 @@ export const store = new Vuex.Store({
       return state.loading;
     },
     term: state => {
-      return state.searchQuery.term
+      return state.searchQuery.term;
     },
     location: state => {
-      return state.searchQuery.location
+      return state.searchQuery.location;
     },
     search_coordinates: state => {
       return {
         latitude: state.searchQuery.latitude,
         longitude: state.searchQuery.longitude
-      }
+      };
     },
     response_status: state => {
       return state.searchQuery.response_status;
@@ -161,9 +161,13 @@ export const store = new Vuex.Store({
         .get("/search", {
           params: {
             term: state.searchQuery.term,
-            ...(state.searchQuery.location != "Current Location" && {location: state.searchQuery.location}),
-            ...(state.searchQuery.location == "Current Location" && {latitude: state.searchQuery.latitude,
-              longitude: state.searchQuery.longitude}),
+            ...(state.searchQuery.location != "Current Location" && {
+              location: state.searchQuery.location
+            }),
+            ...(state.searchQuery.location == "Current Location" && {
+              latitude: state.searchQuery.latitude,
+              longitude: state.searchQuery.longitude
+            }),
             open_now: state.searchQuery.open_now,
             price:
               state.searchQuery.price.length == 0
@@ -194,13 +198,13 @@ export const store = new Vuex.Store({
           commit("SET_COORDS", coordinates);
           commit("ADD_MARKERS");
         })
-        .catch(error => alert(error))
+        .catch(error => console.log(error))
         .finally(() => commit("LOAD_SPINNER", false));
 
       //push all coordinates from api call to array
     },
-    init({dispatch}){
-      dispatch('getBusinesses');
+    init({ dispatch }) {
+      dispatch("getBusinesses");
     }
   }
 });

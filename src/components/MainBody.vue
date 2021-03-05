@@ -39,6 +39,7 @@
                 <app-empty-search-card
                   v-if="loadingCard"
                   v-for="card in 5"
+                  :key="card"
                 ></app-empty-search-card>
                 <div
                   class="search-result-wrap"
@@ -49,6 +50,7 @@
                   <div
                     class="search-result-content-list"
                     v-for="biz in businesses"
+                    :key="biz.id"
                   >
                     <app-search-result-card
                       :info="biz"
@@ -66,7 +68,7 @@
                       @click="pageBackward"
                     ></b-icon-caret-left>
                   </div>
-                  <div class="col-xs-auto page-nums" v-for="pg in 9">
+                  <div class="col-xs-auto page-nums" v-for="pg in 9" :key="pg">
                     <li
                       v-if="pageCache == calcFirstPage + pg"
                       class="pg-num-focus"
@@ -200,8 +202,7 @@ export default {
     //was a new search query made?
     console.log("before update lifecycle method:" + this.pageCache);
     if (this.searchInitiated) this.pageCache = 1;
-  },
-
+  }
 };
 </script>
 
@@ -311,6 +312,6 @@ li:hover {
 }
 
 .container-fluid-edgless {
-  background-color: #f5f5f5
+  background-color: #f5f5f5;
 }
 </style>

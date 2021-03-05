@@ -5,8 +5,9 @@ import VueGeolocation from "vue-browser-geolocation";
 import * as VueGoogleMaps from "vue2-google-maps";
 import VueRouter from "vue-router";
 import { routes } from "./routes";
+import { GOOGLE_API_KEY } from "../config";
 
-const API_KEY = config.GOOGLE_API_KEY;
+const API_KEY = GOOGLE_API_KEY;
 
 Vue.filter("phoneNumber", function(value) {
   const sliceOne = value.slice(2, 5);

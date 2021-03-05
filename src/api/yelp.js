@@ -1,10 +1,13 @@
 import axios from "axios";
-const API_KEY = config.API_KEY;
+import { API_KEY } from "../../config";
 
 export default axios.create({
   baseURL:
-    "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses",
+    "https://corsanywhere.herokuapp.com/https://api.yelp.com/v3/businesses",
+  json: true,
   headers: {
-    Authorization: `Bearer ${API_KEY}`
+    Authorization: `Bearer ${API_KEY}`,
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "http://localhost:8000"
   }
 });

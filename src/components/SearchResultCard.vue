@@ -11,7 +11,11 @@
           <h5>{{ info.name }}</h5>
           <!-- Star Rating -->
           <div class="row align-items-center no-gutters">
-            <div class="col-xs-auto" v-for="stars in Math.floor(info.rating)">
+            <div
+              class="col-xs-auto"
+              v-for="stars in Math.floor(info.rating)"
+              :key="stars"
+            >
               <b-icon-star-fill
                 class="stars-style star-full"
                 :class="starColor"
@@ -26,6 +30,7 @@
             <div class="col-xs-auto" v-if="info.rating <= 4">
               <b-icon-star-fill
                 v-for="stars in emptyStars"
+                :key="stars"
                 class="stars-style empty-star"
               ></b-icon-star-fill>
             </div>
