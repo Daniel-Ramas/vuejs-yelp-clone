@@ -21,6 +21,7 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 
 ##Demo Video
 
-https://user-images.githubusercontent.com/63072164/110185842-551fa300-7dc8-11eb-9df7-3aa6107f6bbb.mp4
+![yelp-clone-gif](https://user-images.githubusercontent.com/63072164/110186420-0ffc7080-7dca-11eb-8f26-d2b3c3b67717.gif)
+
 
 
